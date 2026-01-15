@@ -15,6 +15,26 @@ export class MyMCP extends McpAgent {
 			content: [{ type: "text", text: String(a + b) }],
 		}));
 
+		this.server.tool("reply", { prompt: z.string() }, async ({ prompt }) => {
+			const messages = [
+				{ role: "system", content: "You are a friendly assistant" },
+				{
+					role: "user",
+					content: prompt,
+				},
+				];
+
+			const response = await this.env.AI.run('@cf/meta/llama-3.1-8b-instruct-awq', {
+				messages
+			}, {
+				gateway: {
+					id: "demo"
+				}
+			});
+
+			return { content: [{ type: "text", text: response.response, }]}
+		});
+
 
 		this.server.tool("generateImage", { prompt: z.string() }, async ({ prompt }) => {
 			const response = await this.env.AI.run('@cf/black-forest-labs/flux-1-schnell', {
