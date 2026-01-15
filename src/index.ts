@@ -15,6 +15,16 @@ export class MyMCP extends McpAgent {
 			content: [{ type: "text", text: String(a + b) }],
 		}));
 
+
+		this.server.tool("generateImage", { prompt: z.string() }, async ({ prompt }) => {
+			const response = await this.env.AI.run('@cf/black-forest-labs/flux-1-schnell', {
+				prompt,
+				seed: Math.floor(Math.random() * 10)
+			});
+
+			return { content: [{ type: "image", data: response.image!, mimeType: "image/jpg" }] }
+		});
+
 		// Calculator tool with multiple operations
 		this.server.tool(
 			"calculate",
