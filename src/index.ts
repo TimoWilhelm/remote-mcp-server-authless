@@ -26,6 +26,22 @@ export class MyMCP extends McpAgent {
 
 			const response = await this.env.AI.run('@cf/meta/llama-3.1-8b-instruct-awq', {
 				messages
+			});
+
+			return { content: [{ type: "text", text: response.response, }]}
+		});
+
+		this.server.tool("replyWithGatway", { prompt: z.string() }, async ({ prompt }) => {
+			const messages = [
+				{ role: "system", content: "You are a friendly assistant" },
+				{
+					role: "user",
+					content: prompt,
+				},
+				];
+
+			const response = await this.env.AI.run('@cf/meta/llama-3.1-8b-instruct-awq', {
+				messages
 			}, {
 				gateway: {
 					id: "demo"
